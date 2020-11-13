@@ -1,5 +1,5 @@
 {
-  "name": "serverless-contact-me",
+  "name": "contact-me-serverless",
   "description": "An AWS serverless backend implementation for an email based contact form",
   "version": "1.0.0",
   "keywords": [
