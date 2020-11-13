@@ -1,0 +1,77 @@
+# This is the SAM template that represents the architecture of your serverless application
+# https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-template-basics.html
+
+# The AWSTemplateFormatVersion identifies the capabilities of the template
+# https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/format-version-structure.html
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  serverless-contact-me
+
+Transform:
+  - AWS::Serverless-2016-10-31
+
+Parameters:
+  Subject:
+    Type: String
+    Description: The desired email subject
+  TargetEmailAdress:
+    Type: String
+    Description: The desired email address to which the messages should be sent to
+        
+Resources:
+  ContactSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        - Endpoint: !Ref TargetEmailAdress
+          Protocol: email
+      TopicName: "snt-contact-topic"
+  
+  DeadLetterQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "sqs-contact-dead-letter-queue"
+  
+  ContactFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "laf-contact-function"
+      CodeUri: src
+      Handler: handlers/contact.handle
+      Runtime: nodejs12.x
+      MemorySize: 128
+      Timeout: 100
+      Description: Handles incoming contact form requests via http
+      Events:
+        HttpPost:
+          Type: HttpApi
+          Properties:
+            Path: /contact
+            Method: POST
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - SNSPublishMessagePolicy:
+            TopicName: "snt-contact-topic"
+      DeadLetterQueue:
+        Type: SQS
+        TargetArn: !Ref DeadLetterQueue
+      Environment:
+        Variables:
+          SNS_TOPIC: !Ref ContactSNSTopic
+          SUBJECT: !Ref Subject
+
+  ContactFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Join ['', ['/aws/lambda/', !Ref ContactFunction]]
+      RetentionInDays: 7
+      
+#TODO: add ssm parameters to enable external alerting (log group name, function name, queue name, sns topic name)
+#TODO: add ssm parameter to enable custom domains (api-id)
+#TODO: configure api access logs
+#TODO: add lambda authorizer for google captcha
+
+Outputs:
+  ContactFormHttpApiEndpoint:
+    Description: "HTTP api endpoint URL"
+    Value: !Sub "https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/contact"

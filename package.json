@@ -1,0 +1,57 @@
+{
+  "name": "serverless-contact-me",
+  "description": "An AWS serverless backend implementation for an email based contact form",
+  "version": "1.0.0",
+  "keywords": [
+    "aws",
+    "serverless",
+    "sam",
+    "contact",
+    "lambda",
+    "sns"
+  ],
+  "homepage": "https://github.com/cremich/contact-me-serverless",
+  "author": {
+    "name": "Christian Bonzelet",
+    "email": "me@cremich.dev",
+    "url": "https://github.com/cremich"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cremich/contact-me-serverless"
+  },
+  "bugs": {
+    "url": "https://github.com/cremich/contact-me-serverless/issues"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.778.0",
+    "validator": "^13.1.17"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "eslint": "^7.12.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "husky": "^4.3.0",
+    "jest": "^24.7.1",
+    "lint-staged": "^10.4.2",
+    "prettier": "2.1.2",
+    "aws-sdk-mock": "^5.1.0"
+  },
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.{js,css,md}": "prettier --write"
+  }
+}

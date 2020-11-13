@@ -1,0 +1,11 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /contact",
+  "rawPath": "/contact",
+  "rawQueryString": "",
+  "headers": {
+    "content-type": "application/json"
+  },
+  "body": "{\"text\": \"hello world\", \"senderEmail\": \"me@example.com\"}",
+  "isBase64Encoded": false
+}

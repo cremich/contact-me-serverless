@@ -1,0 +1,11 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /contact",
+  "rawPath": "/contact",
+  "rawQueryString": "",
+  "headers": {
+    "content-type": "application/x-www-form-urlencoded"
+  },
+  "body": "c2VuZGVyRW1haWw9dGVzdCU0MGV4YW1wbGUuY29tJnRleHQ9dGVzdAo=",
+  "isBase64Encoded": true
+}
